@@ -25,11 +25,6 @@ class GitHubAPI:
         self.stargazers_count = stargazers_count
         self.language = language
 
-
-def get_my_key(obj):
-  return obj['language'] or 'x'
-
-
 def createTable(sectionItems):
     table = []
 
@@ -45,25 +40,21 @@ def createTable(sectionItems):
             description = description.replace('|', '\\')
             table.append(f'|{name}|{description}|{r.language}|{r.stargazers_count}|\n')
         except Exception as ex:
-            print(i)
             print(ex)
 
 
     return table
 
-repos = dict()
 sectionItems = list()
-
-repoByLang = defaultdict(list)
 
 i=100
 j=1
 
-org = 'Mozilla'
+org = 'SomeOrg'
 
 while i==100:
-    # if j == 3:
-    #     break
+    if j == 3:
+        break
     try:
         repo =f'https://api.github.com/orgs/{org}/repos?page={j}&per_page={i}'
         r = requests.get(repo, auth=HTTPBasicAuth('UserName', 'Token'))
@@ -73,9 +64,7 @@ while i==100:
                 sectionItems.append(
                     GitHubAPI(t["id"], t["node_id"], t["name"], t["full_name"], t["private"], 
                     t["html_url"], t["description"], t["stargazers_count"],  t["language"]))
-                # sectionItems.append(t)
-            i=len(items)
-            print(i)
+            print(len(items))
         else:
             print('not ok', end=' ')
             print(i, end=' ')
@@ -84,10 +73,6 @@ while i==100:
     print(j)
     j=j+1
 
-# for k in d.keys():
-#     print(f'{k}:{len(d[k])}')
-#     for l in d[k]:
-#         print(f'{l.full_name}:{l.stargazers_count}')
-with open(f'{org}ReposTop100.md', 'w', encoding='utf-8') as f:
+with open(f'{org}ReposTop100_1.md', 'w', encoding='utf-8') as f:
     f.writelines(createTable(sectionItems))
 
