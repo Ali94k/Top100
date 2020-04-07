@@ -53,8 +53,6 @@ j=1
 org = 'SomeOrg'
 
 while i==100:
-    if j == 3:
-        break
     try:
         repo =f'https://api.github.com/orgs/{org}/repos?page={j}&per_page={i}'
         r = requests.get(repo, auth=HTTPBasicAuth('UserName', 'Token'))
@@ -65,6 +63,7 @@ while i==100:
                     GitHubAPI(t["id"], t["node_id"], t["name"], t["full_name"], t["private"], 
                     t["html_url"], t["description"], t["stargazers_count"],  t["language"]))
             print(len(items))
+            i = len(items)
         else:
             print('not ok', end=' ')
             print(i, end=' ')
